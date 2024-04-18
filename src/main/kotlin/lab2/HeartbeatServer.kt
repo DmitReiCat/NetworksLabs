@@ -2,11 +2,9 @@ package lab2
 
 import Config.PORT
 import Config.TIMEOUT
-import java.lang.Thread.sleep
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
-import kotlin.random.Random
 
 fun main() {
     val server = HeartbeatServer(PORT)

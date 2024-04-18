@@ -4,13 +4,11 @@ import Config.BUFFER_SIZE
 import Config.HOST
 import Config.PORT
 import Config.TIMEOUT
-import java.lang.System.currentTimeMillis
 import java.lang.System.nanoTime
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 import java.net.SocketTimeoutException
-import java.nio.charset.Charset
 
 fun main() {
     val client = UDPPingClient1(HOST, PORT)
@@ -20,7 +18,7 @@ fun main() {
 class UDPPingClient1(
     private val host: String,
     private val port: Int,
-    private val timeout: Int = TIMEOUT
+    private val timeout: Int = TIMEOUT,
 ) {
     fun run() {
         val clientSocket = DatagramSocket().apply { soTimeout = timeout }
@@ -43,7 +41,7 @@ class UDPPingClient1(
                     val rtt = (endTime - startTime) / 1000000.0 // Вычисляем время RTT в миллисекундах
                     val response: String = receivePacket.data.decodeToString(0, receivePacket.length)
                     println(
-                        "Response from ${receivePacket.address}:${receivePacket.port}: $response RTT= $rtt milliseconds"
+                        "Response from ${receivePacket.address}:${receivePacket.port}: $response RTT= $rtt milliseconds",
                     )
                 } catch (e: SocketTimeoutException) {
                     println("Request timed out")

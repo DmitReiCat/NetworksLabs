@@ -60,20 +60,20 @@ suspend fun main() {
                         cache[proxyUrl] = CachedContent(contentBytes, httpResponse.contentType(), currentTimeMillis())
                         println("Answering from latest cache")
                         call.respondBytes(
-                            bytes = cache[proxyUrl]!!.content
+                            bytes = cache[proxyUrl]!!.content,
                         )
                     } catch (e: Exception) {
                         val errorPage = "<html><body><h1>Error 404: Not Found</h1></body></html>"
                         call.respondBytes(
                             status = HttpStatusCode.NotFound,
-                            bytes = errorPage.toByteArray()
+                            bytes = errorPage.toByteArray(),
                         )
                     }
                 }
             }
 
             post("/{...}") {
-                var proxyUrl = call.getProxyUrl()
+                val proxyUrl = call.getProxyUrl()
 
                 val response: HttpResponse =
                     client.post(proxyUrl) {
@@ -95,11 +95,12 @@ suspend fun main() {
 
 private fun ApplicationCall.getProxyUrl(): String {
     val referer = request.headers["Referer"]
-    var proxyUrl = if (referer != null) {
-        referer.replace(oldValue = "http://0.0.0.0:$PORT/", newValue = "") + request.uri
-    } else {
-        request.uri.substring(startIndex = 1)
-    }
+    var proxyUrl =
+        if (referer != null) {
+            referer.replace(oldValue = "http://0.0.0.0:$PORT/", newValue = "") + request.uri
+        } else {
+            request.uri.substring(startIndex = 1)
+        }
     if (!proxyUrl.startsWith("http")) proxyUrl = "http://$proxyUrl"
     return proxyUrl
 }
